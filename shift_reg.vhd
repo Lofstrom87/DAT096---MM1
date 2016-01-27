@@ -1,5 +1,5 @@
 -- Generic shift register.
--- USEd in I2S
+-- Used in I2S
 -- 2016-01-27
 -- Samples signals and shifts register values every clock pulse (serial clock).
 -- When word_select changes value the value in the shift registry is sent to the parallel_out
