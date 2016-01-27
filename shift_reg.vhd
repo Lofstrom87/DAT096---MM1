@@ -1,4 +1,6 @@
--- Generic length shift register.
+-- Generic shift register.
+-- Used in I2S
+-- 2016-01-27
 
 library ieee;
 use ieee.STD_LOGIC_1164.all;
@@ -14,7 +16,7 @@ end SHIFT_REG;
 architecture SHIFT_REG_architecture of  SHIFT_REG is
 	CONSTANT RESET_ACTIVE: STD_LOGIC := '1'; --Choose if reset is active high or low.
 
-	SIGNAL s_interconnect_register: STD_LOGIC_VECTOR(N-1 downto 0);
+	SIGNAL s_interconnect_register: STD_LOGIC_VECTOR(N downto 0);
 COMPONENT FF_REG IS
    PORT(
       clk 	 : IN STD_LOGIC;
@@ -35,12 +37,12 @@ registers: for i in 0 to N-1 generate
 		);
 	end generate;
 
-process(clk, reset)
+process(word_select, reset)
 begin
 	if(reset = RESET_ACTIVE) then
-		
-	elsif(rising_edge(clk)) then
-		
+		parallel_out <= (others => '0');
+	elsif(word_select'event) then
+		parallel_out <= s_interconnect_register(N downto 1);
 	end if;
 end process;
 
