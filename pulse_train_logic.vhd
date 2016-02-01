@@ -2,8 +2,6 @@
 -- Used to generate pulse train signal for nMOS and pMOS transistors.
 -- 2016-01-27
 
--- TODO fix count to CLOCK_PULSES_LOW before going from activated transistor state to the next iteration.
-
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 
@@ -39,7 +37,7 @@ BEGIN
 	END IF;
 END PROCESS;
 
-PROCESS(current_state)
+PROCESS(current_state, clk)
 	VARIABLE count: INTEGER RANGE 0 TO 511 := 32; -- Variable used to count time signals are low and high. 
 BEGIN
 	CASE current_state IS
