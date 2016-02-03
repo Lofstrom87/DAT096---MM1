@@ -4,6 +4,8 @@
 -- Samples signals and shifts register values every clock pulse (serial clock).
 -- When word_select changes value the value in the shift registry is sent to the parallel_out
 
+-- TODO fix so that it waits after 12 bits have been received, and halts untill word select changes
+
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 
@@ -21,23 +23,23 @@ ARCHITECTURE shift_reg_architecture OF shift_reg IS
 
 	-- Signals
 	SIGNAL s_interconnect_register: STD_LOGIC_VECTOR(N downto 0); -- Signal that interconnects the registers.
-COMPONENT FF_REG IS
+COMPONENT reg IS
    PORT(
-      clk 	 : IN STD_LOGIC;
-      areset : IN STD_LOGIC;   
-      d 	 : IN STD_LOGIC;
-      q 	 : OUT STD_LOGIC
+      clk,areset,input : IN STD_LOGIC;
+      output : OUT STD_LOGIC
    );
 END COMPONENT;
 
 BEGIN
-
+ 
+	s_interconnect_register(0) <= serial_in;
+ 
 registers: for i in 0 to N-1 generate
-		mux_i_bit: FF_REG port map(
+		mux_i_bit: reg port map(
 			clk => clk,
 			areset => reset,
-			d => s_interconnect_register(i),
-			q => s_interconnect_register(i+1)
+			input => s_interconnect_register(i),
+			output => s_interconnect_register(i+1)
 		);
 	END generate;
 
