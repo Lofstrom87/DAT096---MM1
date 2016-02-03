@@ -34,8 +34,27 @@ END COMPONENT FF_reg_delay;
 
 SIGNAL delay_output : STD_LOGIC_VECTOR(11 DOWNTO 0);
 SIGNAL delay_input  : STD_LOGIC_VECTOR(11 DOWNTO 0);
+SIGNAL delay_clk 	: STD_LOGIC;
+CONSTANT delay_const: INTEGER := 625;   -- Constant for clock-divider.
+										-- Put X = (100 MHz*12)/(OSR*sclk) here.
 
 BEGIN
+
+clk_div: PROCESS(clk, areset)
+variable counter : INTEGER := 0;
+	BEGIN
+		IF (areset = '1') THEN
+			delay_clk <= '0';
+		ELSIF rising_edge(clk) THEN
+			IF (counter = delay_const) THEN
+				delay_clk <= NOT(delay_clk);
+				counter := 0;
+			ELSE
+				counter := (counter + 1);
+			END IF;
+		END IF;
+END PROCESS clk_div;
+
 
 adder:	RCA_ovf	GENERIC MAP(12)
 				PORT MAP(
@@ -47,7 +66,7 @@ adder:	RCA_ovf	GENERIC MAP(12)
 				
 delay:	FF_reg_delay
 				PORT MAP(
-					clk => clk,
+					clk => delay_clk,
 					areset => areset,
 					input => delay_input,
 					output => delay_output					
