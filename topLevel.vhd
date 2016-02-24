@@ -21,14 +21,14 @@ END ENTITY topLevel;
 ARCHITECTURE arch_topLevel OF topLevel IS
 
 
-COMPONENT sigmaDelta IS
+COMPONENT sigmaDelta2 IS
 	PORT (
 		clk : IN STD_LOGIC;
 		areset : IN STD_LOGIC;
 		data : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
 		overflow: OUT STD_LOGIC	
 	);
-END COMPONENT sigmaDelta;
+END COMPONENT sigmaDelta2;
 
 COMPONENT shift_reg IS
 	generic(N: integer := 12); -- Number of registers used.
@@ -61,7 +61,7 @@ BEGIN
 
 decoder_out <= "100000000000";							
 
-converter: sigmaDelta PORT MAP(
+converter: sigmaDelta2 PORT MAP(
 							   clk => sys_clk,
 							   areset => areset,
 							   data => decoder_out,
